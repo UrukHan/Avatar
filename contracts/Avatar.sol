@@ -5,61 +5,74 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./Wallet.sol";
-import "./BaseComponentContract.sol";
-import "./CustomComponentContract.sol";
+import "./BaseComponent.sol";
+import "./CustomComponent.sol";
 
-contract AvatarContract is Wallet, ERC1155 {
-    // BaseComponentCreation temp = new BaseComponentCreation();
+contract Avatar is Wallet, ERC1155 {
 
-    address private _baseComponent;
-    address private _customComponent;
+    string public name = "Avatar";   // NFTs name
+    address private _baseComponent;    // Base component addrress
+    address private _customComponent;    // Custom component addrress
     mapping (uint256 => string) private _tokenURIs;   // Create the mapping for TokenID -> URI
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds; // Counter number of NFT
+    Counters.Counter private _tokenIds;   // Counter number of NFT
 
+    // Constructor
     constructor() ERC1155("any uri, will be replaced later") {}
 
+    // Set base component address contract
     function setBaseAddressContract(address addr) external isOwner {
         _baseComponent = addr;
     }
+
+    // Get base component address contract
     function getBaseAddressContract() external view isOwner returns(address) {
         return(_baseComponent);
     }
+
+    // Set custom component address contract
     function setCustomAddressContract(address addr) external isOwner {
         _customComponent = addr;
     }
+
+    // Get custom component address contract
     function getCustomAddressContract() external view isOwner returns(address) {
         return(_customComponent);
     }
-    /*function callBalanceOfBase(address addr, uint256 id) public view returns(uint) {
-        BaseComponentContract base = BaseComponentContract(payable(_baseComponent));
-        return(base.balanceOf(addr, id));
-    }*/
+
+    // Mint tokens
     function mintToken(string memory tokenURI, uint256 amount, uint256[] memory ids_b, uint256[] memory amounts_b,
         uint256[] memory ids_c, uint256[] memory amounts_c) external payable returns(uint256) {   // Mint base component token
-        BaseComponentContract base = BaseComponentContract(payable(_baseComponent));
-        CustomComponentContract custom = CustomComponentContract(payable(_customComponent));
+        BaseComponent base = BaseComponent(payable(_baseComponent));
+        CustomComponent custom = CustomComponent(payable(_customComponent));
         for(uint i = 0; i < ids_b.length; i++) {
-            require(base.balanceOf(msg.sender, ids_b[i]) >= amounts_b[i]*amount);
+            require(base.balanceOf(msg.sender, ids_b[i]) >= amounts_b[i]*amount, "not enough resources");
         }
         for(uint i = 0; i < ids_c.length; i++) {
-            require(custom.balanceOf(msg.sender, ids_c[i]) >= amounts_c[i]*amount);
+            require(custom.balanceOf(msg.sender, ids_c[i]) >= amounts_c[i]*amount, "not enough resources");
         }
-        base.callReturnBaseComponentsBatch(msg.sender, ids_b, amounts_b);
-        custom.callReturnCustomComponentsBatch(msg.sender, ids_c, amounts_c);
+        base.burnBaseComponentsBatch(msg.sender, ids_b, amounts_b);
+        custom.burnCustomComponentsBatch(msg.sender, ids_c, amounts_c);
         uint256 newItemId = _tokenIds.current();
         _mint(msg.sender, newItemId, amount, "");  //_mint(account, id, amount, data), data is usually set to ""
         _setTokenUri(newItemId, tokenURI);
         _tokenIds.increment();
         return newItemId;
     }
-    function uri(uint256 tokenId) override public view returns (string memory) { // We override the uri function of the EIP-1155: Multi Token Standard (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC1155/ERC1155.sol)
+
+    // Burn tokens
+    function burnTokens(uint256[] memory _ids, uint256[] memory _amounts) external {
+        _burnBatch(msg.sender, _ids, _amounts);
+    }
+
+    // View tokens URI
+    function uri(uint256 tokenId) override public view returns (string memory) {
         return(_tokenURIs[tokenId]);
     }
-    function _setTokenUri(uint256 tokenId, string memory tokenURI) private { // Set token uri
+
+    // Set tokens URI
+    function _setTokenUri(uint256 tokenId, string memory tokenURI) private {
         _tokenURIs[tokenId] = tokenURI;
     }
 }
 
-
-// burn,   admin accounts,  verify, delete contract, общее количество типов токенов/токенов, multi sig admins, мультивызов, base64 для uri, 

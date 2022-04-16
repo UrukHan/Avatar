@@ -7,69 +7,61 @@ import "./Acoin.sol";
 
 contract Wallet is Owner {
 
-    // Event Logs
     event Log(string func, address sender, uint value, bytes data);
     event WalletSet(address indexed oldWallet, address indexed newWallet);
 
-    address payable internal wallet;  // Wallet address
+    address payable internal wallet;
     address private _avatarCoinAddress; // Contract coin address
+    //mapping (address => bool) buyers;
 
-    // Constructor
     constructor() {
         wallet = payable(address(this));
         emit WalletSet(address(0), wallet);
     }
-
-    // Set coin address
     function setCoinAddress(address addr) external isOwner {   // Change wallet
         _avatarCoinAddress = addr;
     }
-
-    // Get coin address
     function getCoinAddressContract() external view isOwner returns(address) {
         return _avatarCoinAddress;
     }
-
-    // Pay in coin
+    //function getBayers(address _addr) public view isOwner returns(bool) {
+    //    return buyers;
+    //}
+    //function addBayer(address _addr) public isOwner {
+    //    buyers[_addr] = true;
+    //}
     function pay(address payer, uint amount) public {   // internal
         Acoin acoin = Acoin(_avatarCoinAddress);
-        require(acoin.transferFrom(payer, wallet, amount), "call filed");
+        acoin.transferFrom(payer, wallet, amount);
     }
-
-    // Get coin balance
+    /*function buyWithEth(address payable _to, uint amount) public payable returns(bool){
+        require(msg.value == amount, "Rejected");
+        (bool succes, ) = _to.call{value: amount}("");
+        require(succes, "call filed");
+        return succes;
+    }*/
     function getCoinAmounts() external view isOwner returns(uint) {
         Acoin acoin = Acoin(_avatarCoinAddress);
         return acoin.balanceOf(address (wallet));
     }
-
-    // Ether balance wallet function
     function getBalance() external view isOwner returns(uint) {
         return wallet.balance;
     }
-
-    // Getting wallet address
     function getWallet() external view isOwner returns(address) {
         return address(wallet);
     }
-
-    // Setting wallet address
-    function setWallet(address newWallet) external isOwner {
+    function setWallet(address newWallet) external isOwner {   // Change wallet
         emit OwnerSet(wallet, newWallet);
         wallet = payable(newWallet);
     }
-
-    // Withdraw ether from wallet to address
     function withdraw(address _addr, uint _amount) external isOwner {
         payable(_addr).transfer(_amount);
     }
-
-    // Withdraw coins from wallet to address
-    function withdrawTokens(uint amount) external isOwner {
+    function withdrawTokens(uint amount) public{
         Acoin acoin = Acoin(_avatarCoinAddress);
-        acoin.send(msg.sender, amount, "");  //address(this),
+        acoin.operatorSend(address(this), address(msg.sender), amount, "", "");  //address(this),
     }
-
-    // Fallback functions
+    // проверить нижние через метамаск
     fallback() external payable{
         emit Log('fallback', msg.sender, msg.value, msg.data);
     }

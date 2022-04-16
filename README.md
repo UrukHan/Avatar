@@ -5,6 +5,7 @@ This project demonstrates a basic Hardhat use case. It comes with a sample contr
 Try running some of the following tasks:
 
 ```shell
+
 npx hardhat accounts
 npx hardhat compile
 npx hardhat clean
@@ -12,13 +13,16 @@ npx hardhat test
 npx hardhat node
 node scripts/deploy-script.js
 npx hardhat help
-```
 
+```
+// admin accounts, verify, delete contract, общее количество типов токенов/токенов, multi sig admins, мультивызов, base64 для uri,
 
 // npm install @openzeppelin/contracts
 // npm install --save-dev hardhat
 // npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers
 // npm install --save-dev solidity-coverage
+// npm install --save-dev @nomiclabs/hardhat-web3 web3
+// npm install dotenv
 
 // npx hardhat compile
 // npx hardhat test
@@ -34,6 +38,9 @@ npx hardhat help
 
 // npm install --save-dev @nomiclabs/hardhat-web3 web3
 
+
+
+// 0x7922b545851cfbFb7efE94a456e70900aa548092     Acoin
 
 
 /*

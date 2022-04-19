@@ -2,11 +2,12 @@
 require("@nomiclabs/hardhat-waffle");
 require("solidity-coverage");
 require("dotenv").config();
+require("@nomiclabs/hardhat-etherscan");
 require("./tasks/testTasks");
 require("./tasks/baseTasks");
 require("./tasks/customTasks");
 require("./tasks/avatarTasks");
-require("./tasks/coinTasks");
+require("../Acoin/tasks/coinTasks");
 
 module.exports = {
   defaultNetwork: "rinkeby",
@@ -18,8 +19,15 @@ module.exports = {
       gas: 2100000,
       gasPrice: 8000000000
     }
-  }
+  },
+  etherscan: {
+    apikey: {
+      rinkeby: process.env.ETHERSCAN_API
+    }
+  },
 };
+
+// npx hardhat verify 0xE800E613328D2a045aB25E121A8a37E3AB863E6F
 
 
 /*

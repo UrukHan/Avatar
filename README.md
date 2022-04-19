@@ -17,12 +17,15 @@ npx hardhat help
 ```
 // admin accounts, verify, delete contract, общее количество типов токенов/токенов, multi sig admins, мультивызов, base64 для uri,
 
-// npm install @openzeppelin/contracts
+// 
+
 // npm install --save-dev hardhat
 // npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers
 // npm install --save-dev solidity-coverage
 // npm install --save-dev @nomiclabs/hardhat-web3 web3
+// npm install --save-dev @nomiclabs/hardhat-etherscan
 // npm install dotenv
+
 
 // npx hardhat compile
 // npx hardhat test
@@ -37,10 +40,16 @@ npx hardhat help
 // npx hardhat accounts
 
 // npm install --save-dev @nomiclabs/hardhat-web3 web3
+// npm install @index/sdk
 
 
 
-// 0x7922b545851cfbFb7efE94a456e70900aa548092     Acoin
+Owner address: 0x1C3f50CA4f8b96fAa6ab1020D9C54a44ADfAc814
+Base contract address: 0xE75655B812B0A46f8Cc3439280a356BF8E3F75c1
+Custom contract address: 0xcC43dBbcE51D2d49ACc0d0F53713eA47B07B4657
+Avatar contract address: 0x9A64768eC7256314Cd1532ACEF86319b7A7A5380
+Acoin contract address: 0x7922b545851cfbFb7efE94a456e70900aa548092
+
 
 
 /*

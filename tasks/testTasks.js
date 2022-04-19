@@ -5,17 +5,17 @@ require("@nomiclabs/hardhat-ethers");
 //const BaseComponentContractArtifact = require('../artifacts/contracts/BaseComponent.sol/BaseComponentContract.json')
 //const baseContract = new ethers.Contract(taskArgs.contractAddress, BaseComponentContractArtifact.abi, owner)
 
-// npx hardhat balance --account 0x1C3f50CA4f8b96fAa6ab1020D9C54a44ADfAc814 --network rinkeby
+// npx hardhat balance --account 0x1C3f50CA4f8b96fAa6ab1020D9C54a44ADfAc814
 task("balance", "Prints an account's balance (acc) =>")
     .addParam("account", "The account's address")
-    .setAction(async (taskArgs) => {
+    .setAction(async (taskArgs) => {  // ({contractAddress, uri, amount}, hre, runSuper)
         const account = await ethers.getSigner(taskArgs.account);
         const balance = await ethers.provider.getBalance(account.address);
         console.log("Balance: ", await ethers.utils.formatEther(balance), "ETH");
     })
 
 
-// npx hardhat walletSetAddress --contract 0x56dE0B467CA8857Ed19207865E41ec5bA1a0e0a7 --addr 0x7922b545851cfbFb7efE94a456e70900aa548092 --network rinkeby
+// npx hardhat walletSetAddress --contract 0x56dE0B467CA8857Ed19207865E41ec5bA1a0e0a7 --addr 0x7922b545851cfbFb7efE94a456e70900aa548092
 task("walletSetAddress", "set coin address (contract, addr) =>")
     .addParam("contract", "Contract address")
     .addParam("addr", "Account address")

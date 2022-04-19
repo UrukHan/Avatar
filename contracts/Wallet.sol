@@ -13,6 +13,7 @@ contract Wallet is Owner {
 
     address payable internal wallet;  // Wallet address
     address private _avatarCoinAddress; // Contract coin address
+    Acoin acoin = Acoin(_avatarCoinAddress);
 
     // Constructor
     constructor() {
@@ -22,7 +23,7 @@ contract Wallet is Owner {
 
     // Set coin address
     function setCoinAddress(address addr) external isOwner {   // Change wallet
-        _avatarCoinAddress = addr;
+        acoin = Acoin(addr);
     }
 
     // Get coin address
@@ -32,13 +33,11 @@ contract Wallet is Owner {
 
     // Pay in coin
     function pay(address payer, uint amount) public {   // internal
-        Acoin acoin = Acoin(_avatarCoinAddress);
         require(acoin.transferFrom(payer, wallet, amount), "call filed");
     }
 
     // Get coin balance
     function getCoinAmounts() external view isOwner returns(uint) {
-        Acoin acoin = Acoin(_avatarCoinAddress);
         return acoin.balanceOf(address (wallet));
     }
 
@@ -65,7 +64,6 @@ contract Wallet is Owner {
 
     // Withdraw coins from wallet to address
     function withdrawTokens(uint amount) external isOwner {
-        Acoin acoin = Acoin(_avatarCoinAddress);
         acoin.send(msg.sender, amount, "");  //address(this),
     }
 

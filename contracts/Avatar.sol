@@ -51,8 +51,16 @@ contract Avatar is Wallet, ERC1155 {
         for(uint i = 0; i < ids_c.length; i++) {
             require(custom.balanceOf(msg.sender, ids_c[i]) >= amounts_c[i]*amount, "not enough resources");
         }
-        base.burnBaseComponentsBatch(msg.sender, ids_b, amounts_b);
-        custom.burnCustomComponentsBatch(msg.sender, ids_c, amounts_c);
+        uint256[] memory _b_amounts;
+        uint256[] memory _c_amounts;
+        for(uint i = 0; i < amounts_b.length; i++) {
+            _b_amounts[i] = amounts_b[i]*amount;
+        }
+        for(uint i = 0; i < amounts_b.length; i++) {
+            _c_amounts[i] = amounts_c[i]*amount;
+        }
+        base.burnBaseComponentsBatch(msg.sender, ids_b, _b_amounts);
+        custom.burnCustomComponentsBatch(msg.sender, ids_c, _c_amounts);
         uint256 newItemId = _tokenIds.current();
         _mint(msg.sender, newItemId, amount, "");  //_mint(account, id, amount, data), data is usually set to ""
         _setTokenUri(newItemId, tokenURI);
